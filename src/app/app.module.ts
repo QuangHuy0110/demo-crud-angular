@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProductListComponent } from './Components/product-list/product-list.component';
@@ -12,9 +10,14 @@ import { ProductService } from './Service/product.service';
 import { HighlightDirective } from './Directives/highlight.directive';
 import { PriceFormatPipe } from './Pipes/price-format.pipe';
 import { HeaderComponent } from './Components/header/header.component';
-import { EllipsisPipe } from './Pipes/ellicips.pipe';
 import { ProductCardComponent } from './Components/product-list/product-card/product-card.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { RegisterComponent } from './Components/register/register.component';
+import { LoginComponent } from './Components/login/login.component';
+import { AuthService } from './Service/auth.service';
+import { EllipsisPipe } from './Pipes/ellicips.pipe';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,9 +28,12 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     CheckoutComponent,
     HighlightDirective,
     PriceFormatPipe,
-    EllipsisPipe,
     HeaderComponent,
-    ProductCardComponent
+    ProductCardComponent,
+    RegisterComponent,
+    LoginComponent,
+    PriceFormatPipe,
+    EllipsisPipe
   ],
   imports: [
     BrowserModule,
@@ -35,7 +41,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [CartService, ProductService],
+  providers: [CartService, ProductService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

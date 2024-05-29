@@ -1,5 +1,5 @@
 <div class="card" style="width: 18rem;">
-    <img class="card-img-top img-cover" src="{{ product.image }}" alt="Card image cap">
+    <img class="card-img-top img-cover" style="height: 200px;" src="{{ product.image }}" alt="Card image cap">
     <div class="card-body">
         <h5 class="card-title">{{product.title | ellipsis:15}}</h5>
         <p>{{ product.price | priceFormat }}</p>
