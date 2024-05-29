@@ -1,0 +1,13 @@
+<!-- <app-header /> -->
+<h4>Product List</h4>
+<ng-container *ngIf="products.length; else noProducts">
+    <div class="d-flex gap-2 flex-wrap ">
+        <ng-container *ngFor="let product of products">
+            <app-product-card [product]="product" (viewDetail)="viewDetail($event)"></app-product-card>
+        </ng-container>
+    </div>
+
+</ng-container>
+<ng-template #noProducts>
+    <p>No products available.</p>
+</ng-template>
