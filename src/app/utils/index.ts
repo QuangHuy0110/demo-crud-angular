@@ -1,13 +1,17 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function checkMatchValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const formGroup = control as any;
-    const password = formGroup.controls['password'].value;
-    const repeatPassword = formGroup.controls['repeatPassword'].value;
+  return (control: AbstractControl): ValidationErrors => {
+    const group = control.parent;
+    if (!group) {
+      return {};
+    }
+
+    const password = group.get('password')?.value;
+    const repeatPassword = group.get('repeatPassword')?.value;
 
     if (password === repeatPassword) {
-      return null;
+      return {};
     }
 
     return { noMatch: true };

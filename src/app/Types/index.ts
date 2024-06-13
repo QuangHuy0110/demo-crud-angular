@@ -18,3 +18,7 @@ export interface User {
     email: string;
     password: string;
 }
+
+export type Cart = Product & {
+    quantity: number
+}

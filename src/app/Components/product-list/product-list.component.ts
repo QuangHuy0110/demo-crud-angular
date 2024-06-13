@@ -24,17 +24,12 @@ export class ProductListComponent implements OnInit {
 
   getProducts() {
     this.isLoading = true
-    this.productService.getProducts()
-      .subscribe(
-        data => {
-          this.products = data;
-          this.isLoading = false;
-        },
-        err => {
-          this.isLoading = false;
-          console.log(err);
-        }
-      );
+    this.productService.fetchProducts().subscribe();
+    this.productService.getProducts().subscribe(
+      data => {
+        this.products = data;
+      }
+    );
   }
   viewDetail(id: number) {
     this.router.navigate([`/product/${id}`,]);
