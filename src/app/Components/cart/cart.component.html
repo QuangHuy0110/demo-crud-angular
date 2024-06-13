@@ -1,55 +1,64 @@
-<ng-template #emptyCart>
-    <p>Your cart is empty.</p>
-</ng-template>
+
 <!-- {{ item.name }} - {{ item.price | priceFormat }} -->
 <div class="container bootstrap snippets bootdey">
-    <div class="col-md-9 col-sm-8 content">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-info panel-shadow">
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Description</th>
-                                        <th>Qty</th>
-                                        <th>Price</th>
-                                        <th>Total</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <ng-container *ngIf="items.length; else emptyCart">
-                                        <tr *ngFor="let item of items; index as i" appHighlight>
-                                            <td><img src={{item.image}} class="img-cart w-25 "></td>
-                                            <td><strong>Product {{i + 1}}</strong></td>
-                                            <td>
-                                                <form class="form-inline">
-                                                    <input class="form-control" type="text">
-                                                </form>
-                                            </td>
-                                            <td>{{item.price | priceFormat}}</td>
-                                            <td>{{ item.price * item.quantity }}</td>
-                                            <td class="btn btn-danger " (click)="deleteItem(item.id)">Delete</td>
-                                        </tr>
-                                        <button (click)="clearCart()">Clear Cart</button>
-                                        <a routerLink="/checkout">Checkout</a>
-                                    </ng-container>
-
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <a [routerLink]="['/products']" class="btn btn-success"><span
-                        class="glyphicon glyphicon-arrow-left"></span>&nbsp;Continue
-                    Shopping</a>
-                <a [routerLink]="['/checkout']" class="btn btn-primary pull-right">Next<span
-                        class="glyphicon glyphicon-chevron-right"></span></a>
-            </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-info panel-shadow">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="items.length; else emptyCart">
+                  <tr *ngFor="let item of items; index as i" appHighlight>
+                    <td>
+                      <img src="{{ item.image }}" class="img-cart w-25" />
+                    </td>
+                    <td>
+                      <strong>{{item.title}}</strong>
+                    </td>
+                    <td>
+                      <form class="form-inline">
+                        <input [value]="item.quantity" class="form-control" type="number" (blur)="handleChangeQty(item, $event.target.value)" />
+                      </form>
+                    </td>
+                    <td>{{ item.price | priceFormat }}</td>
+                    <td>{{ item.price * item.quantity }}</td>
+                    <td class="btn btn-danger" (click)="deleteItem(item.id)">
+                      Delete
+                    </td>
+                  </tr>
+                  
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
+      <div class="btn-group">
+        <a [routerLink]="['/products']" class="btn btn-success"
+        ><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Continue
+        Shopping</a
+      >
+      <a [routerLink]="['/checkout']" class="btn btn-primary "
+        >Next<span class="glyphicon glyphicon-chevron-right"></span
+      ></a>
+      <button class="btn btn-danger" (click)="clearCart()">Clear Cart</button>
+      </div>
+      {{totalPrice}}
     </div>
+  </div>
 </div>
+
+<ng-template #emptyCart>
+  <p>Your cart is empty.</p>
+</ng-template>

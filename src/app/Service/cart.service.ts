@@ -1,66 +1,72 @@
 import { Injectable } from '@angular/core';
 import { Cart, Product } from '../Types';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map, reduce } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class CartService {
-    private cartList = new BehaviorSubject<Cart[]>([]);
+  private cartList = new BehaviorSubject<Cart[]>([]);
 
-    private total = new BehaviorSubject<number>(0)
+  private totalQuantiTy = new BehaviorSubject<number>(0);
 
-    addToCart(product: Product, qty = 1): void {
-        // const existing = this.items.find(item => item.id === product.id);
+  changeQuantity(product: Product, qty = 1): void {
+    const currentCartList = this.cartList.value;
+    const existingIndex = currentCartList.findIndex(
+      (item) => item.id === product.id
+    );
 
-        // this.total += qty;
-
-        // if (existing) {
-        //     existing.quantity += qty;
-        //     return;
-        // }
-
-        // this.items.push({ ...product, quantity: qty });
-        const currentCartList = this.cartList.value;
-        const currentTotal = this.total.value;
-        const existingIndex = currentCartList.findIndex(item => item.id === product.id)
-
-        if (existingIndex !== -1) {
-            currentCartList[existingIndex].quantity += qty;
-        } else {
-            currentCartList.push({ ...product, quantity: qty });
-        }
-
-        this.cartList.next(currentCartList);
-        this.total.next(currentTotal + qty);
+    if (existingIndex !== -1) {
+      currentCartList[existingIndex].quantity = qty;
+    } else {
+      currentCartList.push({ ...product, quantity: qty });
     }
 
-    getItems(): Observable<Cart[]> {
-        return this.cartList.asObservable();
-    }
+    this.cartList.next(currentCartList);
+  }
 
-    clearCart(): void {
-        this.cartList.next([]);
-        this.total.next(0);
-    }
+  addToCart(product: Product) {
+    const currentCartList = this.cartList.value;
+    currentCartList.push({ ...product, quantity: 1 });
+    this.cartList.next(currentCartList);
+  }
 
-    deleteProductByid(id: number) {
-        const currentCart = this.cartList.value;
-        const productIndex = currentCart.findIndex(item => item.id === id);
+  getItems(): Observable<Cart[]> {
+    return this.cartList.asObservable();
+  }
 
-        if (productIndex > -1) {
-            const productQuantity = currentCart[productIndex].quantity;
-            // Remove the product from the cart
-            currentCart.splice(productIndex, 1);
-            // Update the cart list
-            this.cartList.next(currentCart);
-            // Update the total quantity
-            const currentTotal = this.total.value;
-            this.total.next(currentTotal - productQuantity);
-        }
-    }
+  clearCart(): void {
+    this.cartList.next([]);
+    this.totalQuantiTy.next(0);
+  }
 
-    getQuantityCart() {
-        return this.total;
+  deleteProductByid(id: number) {
+    const currentCart = this.cartList.value;
+    const productIndex = currentCart.findIndex((item) => item.id === id);
+
+    if (productIndex > -1) {
+      currentCart.splice(productIndex, 1);
+      this.cartList.next(currentCart);
     }
+  }
+
+  getQuantityCart(): Observable<number> {
+    return this.cartList
+      .asObservable()
+      .pipe(
+        map((cartList) =>
+          cartList.reduce((acc, item) => acc + item.quantity, 0)
+        )
+      );
+  }
+
+  getTotalPrice(): Observable<number> {
+    return this.cartList
+      .asObservable()
+      .pipe(
+        map((cartList) =>
+          cartList.reduce((acc, item) => acc + item.quantity * item.price, 0)
+        )
+      );
+  }
 }

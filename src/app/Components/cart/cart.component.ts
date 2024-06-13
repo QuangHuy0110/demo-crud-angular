@@ -10,12 +10,19 @@ import { Cart, Product } from '../../Types';
 export class CartComponent implements OnInit {
   items: Cart[] = [];
 
+  totalPrice: number = 0;
+
   constructor(private cartService: CartService) { }
 
   ngOnInit(): void {
     this.cartService.getItems().subscribe(
       data => {
         this.items = data
+      }
+    );
+    this.cartService.getTotalPrice().subscribe(
+      data => {
+        this.totalPrice = data
       }
     );
   }
@@ -29,5 +36,12 @@ export class CartComponent implements OnInit {
     this.cartService.deleteProductByid(id)
   }
 
-  handleChangeQty(id: number): void { }
+  handleChangeQty(product: Product,qty: string): void { 
+    const quantity = Number(qty);
+    if(quantity <= 0){
+      this.cartService.deleteProductByid(product.id);
+      return;
+    }
+    this.cartService.changeQuantity(product, Number(qty));
+   }
 }
