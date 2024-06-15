@@ -18,6 +18,7 @@ import { AuthService } from './Service/auth.service';
 import { EllipsisPipe } from './Pipes/ellicips.pipe';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DemoNgZorroAntdModule } from './ng-zorro-antd.module';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    DemoNgZorroAntdModule
   ],
   providers: [CartService, ProductService, AuthService],
   bootstrap: [AppComponent]
