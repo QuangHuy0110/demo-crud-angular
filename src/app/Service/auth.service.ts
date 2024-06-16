@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, delay, map } from 'rxjs';
 import { apiURL } from '../Constants/url';
 import { User } from '../Types';
 import { Router } from '@angular/router';
@@ -15,21 +15,22 @@ export interface RegisterRequest {
 })
 export class AuthService {
   isLogin: boolean = false
-  users: any []
+  users: any[]
   constructor(private httpClient: HttpClient, private router: Router) {
 
   }
 
   register(params: RegisterRequest): Observable<void> {
-    return this.httpClient.post<void>(`${apiURL}/user`, params)
+    return this.httpClient.post<void>(`${apiURL}/user`, params).pipe(delay(3000))
   }
 
-  getUsers() : Observable<User[]> {
+  getUsers(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${apiURL}/user`)
   }
 
   login(params: RegisterRequest): Observable<boolean> {
     return this.getUsers().pipe(
+      delay(3000),
       map(users => {
         const user = users.find(u => u.email === params.email && u.password === params.password);
         if (user) {

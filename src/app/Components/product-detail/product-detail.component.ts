@@ -3,6 +3,7 @@ import { Cart, Product } from '../../Types';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../Service/product.service';
 import { CartService } from '../../Service/cart.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,8 +17,9 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService
-  ) {}
+    private cartService: CartService,
+    private notificationService: NzNotificationService,
+  ) { }
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
@@ -25,6 +27,14 @@ export class ProductDetailComponent implements OnInit {
     this.cartService.getItems().subscribe((data) => {
       this.cartList = data;
     });
+  }
+
+  createNotification(type: 'success' | 'info' | 'warning' | 'error', title: string, content: string): void {
+    this.notificationService.create(
+      type,
+      title,
+      content
+    );
   }
 
   getProductById(id: number) {
@@ -39,15 +49,15 @@ export class ProductDetailComponent implements OnInit {
   }
 
   checkExistInCart(id: number) {
-    return this.cartList.findIndex(item=> item.id === id) !== -1
+    return this.cartList.findIndex(item => item.id === id) !== -1
   }
 
   addToCart(product: Product): void {
     if (this.checkExistInCart(product.id)) {
-      window.alert('item already in cart, please select another one!');
+      this.createNotification('warning', 'warning', 'This product already exists in the cart')
       return;
     }
     this.cartService.addToCart(product);
-    window.alert('Your product has been added to the cart!');
+    this.createNotification('success', 'Success', 'add item successfully!')
   }
 }

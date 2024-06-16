@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService, RegisterRequest } from '../../Service/auth.service';
 import { Router } from '@angular/router';
 import { checkMatchValidator } from '../../utils';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NotificationService } from '../../Service/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -11,9 +13,16 @@ import { checkMatchValidator } from '../../utils';
 })
 export class RegisterComponent implements OnInit {
 
+  isLoading = false;
+
   formRegister: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private notificationService: NotificationService,
+  ) {
 
   }
 
@@ -29,20 +38,22 @@ export class RegisterComponent implements OnInit {
     }, { validators: checkMatchValidator() });
   }
 
-
   onSubmit() {
     const { email, password } = this.formRegister.getRawValue()
     if (!this.formRegister.valid) {
       return
     }
 
+    this.isLoading = true;
     this.authService.register({ email, password }).subscribe(
       data => {
-        console.log(`daata: `, data),
-          this.router.navigate(['/login'])
+        this.isLoading = false;
+        this.notificationService.createNotification('success', 'Success', 'Register success, please login!')
+        this.router.navigate(['/login'])
       },
       err => {
-        console.log(err)
+        this.isLoading = false;
+        this.notificationService.createNotification('error', 'Error', `register faild with error : ${err}!`)
       }
     )
   }

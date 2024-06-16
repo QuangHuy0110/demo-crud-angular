@@ -68,6 +68,8 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzResizableModule } from 'ng-zorro-antd/resizable';
 import { NzPipesModule } from 'ng-zorro-antd/pipes';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import this module
+
 
 @NgModule({
     exports: [
@@ -139,6 +141,7 @@ import { NzPipesModule } from 'ng-zorro-antd/pipes';
         NzWaveModule,
         NzResizableModule,
         NzPipesModule,
+        BrowserAnimationsModule
     ],
 })
 export class DemoNgZorroAntdModule { }

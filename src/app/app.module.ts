@@ -19,6 +19,7 @@ import { EllipsisPipe } from './Pipes/ellicips.pipe';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DemoNgZorroAntdModule } from './ng-zorro-antd.module';
+import { NotificationService } from './Service/notification.service';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,7 @@ import { DemoNgZorroAntdModule } from './ng-zorro-antd.module';
     RegisterComponent,
     LoginComponent,
     PriceFormatPipe,
-    EllipsisPipe
+    EllipsisPipe,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +44,7 @@ import { DemoNgZorroAntdModule } from './ng-zorro-antd.module';
     HttpClientModule,
     DemoNgZorroAntdModule
   ],
-  providers: [CartService, ProductService, AuthService],
+  providers: [CartService, ProductService, AuthService, NotificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

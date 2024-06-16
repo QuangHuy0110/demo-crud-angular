@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../Service/cart.service';
 import { Cart, Product } from '../../Types';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { CheckoutComponent } from '../checkout/checkout.component';
 
 @Component({
   selector: 'app-cart',
@@ -12,7 +14,10 @@ export class CartComponent implements OnInit {
 
   totalPrice: number = 0;
 
-  constructor(private cartService: CartService) { }
+  constructor(
+    private cartService: CartService,
+    private modal: NzModalService,
+  ) { }
 
   ngOnInit(): void {
     this.cartService.getItems().subscribe(
@@ -36,12 +41,22 @@ export class CartComponent implements OnInit {
     this.cartService.deleteProductByid(id)
   }
 
-  handleChangeQty(product: Product,qty: string): void { 
+  handleChangeQty(product: Product, qty: string): void {
     const quantity = Number(qty);
-    if(quantity <= 0){
+    if (quantity <= 0) {
       this.cartService.deleteProductByid(product.id);
       return;
     }
     this.cartService.changeQuantity(product, Number(qty));
-   }
+  }
+
+  checkout() {
+    this.modal.create({
+      nzTitle: 'confirm Chekcout ',
+      nzContent: CheckoutComponent,
+      nzMaskClosable: false,
+      nzClosable: false,
+      nzOnOk: () => console.log('Click ok')
+    });
+  }
 }
