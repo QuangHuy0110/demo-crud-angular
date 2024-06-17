@@ -73,6 +73,7 @@ export class CartComponent implements OnInit {
       return;
     }
     this.notificationService.createNotification('success', 'Success', 'Your order has been submitted successfully!')
+    this.cartService.clearCart();
     this.isVisible = false;
   }
 

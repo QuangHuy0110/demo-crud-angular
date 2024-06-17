@@ -17,8 +17,14 @@
                       </label>
                       <input (blur)="passChange()" type="email" id="form3Example3c" class="form-control"
                         formControlName="email" />
-                      <ng-container
-                        *ngTemplateOutlet="errorTemplate; context: { control: formRegister.get('email') }"></ng-container>
+                      <span class="text-danger"
+                        *ngIf="formRegister?.get('email')?.hasError('required') && formRegister?.controls['email']?.touched">
+                        This field is required
+                      </span>
+                      <span class="text-danger"
+                        *ngIf="formRegister?.get('email')?.hasError('email') && formRegister?.controls['email']?.touched">
+                        This field is not in email format
+                      </span>
                     </div>
                   </div>
 
@@ -28,8 +34,14 @@
                       <label class="form-label" for="form3Example4c">Password:</label>
                       <input (blur)="passChange()" type="password" id="form3Example4c" class="form-control"
                         formControlName="password" />
-                      <ng-container
-                        *ngTemplateOutlet="errorTemplate; context: { control: formRegister.get('password') }"></ng-container>
+                      <span class="text-danger"
+                        *ngIf="formRegister?.get('password')?.hasError('required') && formRegister?.controls['password']?.touched">
+                        This field is required!
+                      </span>
+                      <span class="text-danger"
+                        *ngIf="formRegister?.get('password')?.hasError('noMatch') && formRegister?.controls['password']?.touched">
+                        Password and repeat password do not match!
+                      </span>
                     </div>
                   </div>
 
@@ -39,10 +51,17 @@
                       <label class="form-label" for="form3Example4cd">Repeat your password:</label>
                       <input (blur)="passChange()" type="password" id="form3Example4cd" class="form-control"
                         formControlName="repeatPassword" />
-                      <ng-container
-                        *ngTemplateOutlet="errorTemplate; context: { control: formRegister.get('repeatPassword') }"></ng-container>
+                      <span class="text-danger"
+                        *ngIf="formRegister?.get('repeatPassword')?.hasError('required') && formRegister?.controls['repeatPassword']?.touched">
+                        This field is required!
+                      </span>
+                      <span class="text-danger"
+                        *ngIf="formRegister.get('repeatPassword').hasError('noMatch') && formRegister?.controls['repeatPassword']?.touched">
+                        Password and repeat password do not match!
+                      </span>
                     </div>
                   </div>
+
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                     <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">
                       Register
@@ -61,18 +80,4 @@
     </div>
   </section>
 </nz-spin>
-
-<ng-template #errorTemplate let-control="control">
-  <span *ngIf="control.hasError('required') && control.touched" class="text-danger">
-    This field is required
-  </span>
-  <span *ngIf="control.hasError('email') && control.touched" class="text-danger">
-    This field is wrong email
-  </span>
-  <span *ngIf="control.hasError('noMatch') && control.touched" class="text-danger">
-    Password and repeat password do not match!
-  </span>
-  <span *ngIf="control.hasError('minLength') && control.touched" class="text-danger">
-    This field requires at least 8 characters
-  </span>
-</ng-template>
+<ng-template>

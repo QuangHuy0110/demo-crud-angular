@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService, RegisterRequest } from '../../Service/auth.service';
+import { AuthService } from '../../Service/auth.service';
 import { Router } from '@angular/router';
-import { checkMatchValidator } from '../../utils';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NotificationService } from '../../Service/notification.service';
 
 @Component({
@@ -23,7 +21,6 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private notificationService: NotificationService,
   ) {
-
   }
 
   ngOnInit(): void {
@@ -33,14 +30,18 @@ export class RegisterComponent implements OnInit {
   initForm() {
     this.formRegister = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8), checkMatchValidator()]],
-      repeatPassword: ['', [Validators.required, checkMatchValidator()]]
-    });
+      password: ['', [Validators.required,]],
+      repeatPassword: ['', [Validators.required,]]
+    }, { validator: this.mustMatch('password', 'repeatPassword') });
   }
 
   onSubmit() {
     const { email, password } = this.formRegister.getRawValue()
     if (!this.formRegister.valid) {
+      Object.values(this.formRegister.controls).forEach(control => {
+        control.markAsDirty();
+        control.updateValueAndValidity({ onlySelf: true });
+      })
       return
     }
 
@@ -58,14 +59,24 @@ export class RegisterComponent implements OnInit {
     )
   }
 
-  // passChange () =>{
-  //   ['password', 'repeatPassword'].forEach(item => {
-  //     this.formRegister.get(item)?.updateValueAndValidity()
-  //   })
-  // }
   passChange() {
     ['password', 'repeatPassword'].forEach(item => {
       this.formRegister.get(item)?.updateValueAndValidity()
     })
+  }
+
+  mustMatch(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+      if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+        return;
+      }
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ noMatch: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+    };
   }
 }
