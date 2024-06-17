@@ -9,22 +9,16 @@
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
                   Sign up
                 </p>
-
                 <form class="mx-1 mx-md-4" [formGroup]="formRegister" (ngSubmit)="onSubmit()">
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                       <label class="form-label" for="form3Example3c">Your Email:
                       </label>
-                      <input type="email" id="form3Example3c" class="form-control" formControlName="email" />
-                      <span class="text-danger"
-                        *ngIf="formRegister?.get('email')?.hasError('required') && formRegister?.controls['email']?.touched">
-                        This field is required
-                      </span>
-                      <span class="text-danger"
-                        *ngIf="formRegister?.get('email')?.hasError('email') && formRegister?.controls['email']?.touched">
-                        This field is not in email format
-                      </span>
+                      <input (blur)="passChange()" type="email" id="form3Example3c" class="form-control"
+                        formControlName="email" />
+                      <ng-container
+                        *ngTemplateOutlet="errorTemplate; context: { control: formRegister.get('email') }"></ng-container>
                     </div>
                   </div>
 
@@ -32,15 +26,10 @@
                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                       <label class="form-label" for="form3Example4c">Password:</label>
-                      <input type="password" id="form3Example4c" class="form-control" formControlName="password" />
-                      <span class="text-danger"
-                        *ngIf="formRegister?.get('password')?.hasError('required') && formRegister?.controls['password']?.touched">
-                        This field is required!
-                      </span>
-                      <span class="text-danger"
-                        *ngIf="formRegister?.get('password')?.hasError('noMatch') && formRegister?.controls['password']?.touched">
-                        Password and repeat password do not match!
-                      </span>
+                      <input (blur)="passChange()" type="password" id="form3Example4c" class="form-control"
+                        formControlName="password" />
+                      <ng-container
+                        *ngTemplateOutlet="errorTemplate; context: { control: formRegister.get('password') }"></ng-container>
                     </div>
                   </div>
 
@@ -48,19 +37,12 @@
                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                       <label class="form-label" for="form3Example4cd">Repeat your password:</label>
-                      <input type="password" id="form3Example4cd" class="form-control"
+                      <input (blur)="passChange()" type="password" id="form3Example4cd" class="form-control"
                         formControlName="repeatPassword" />
-                      <span class="text-danger"
-                        *ngIf="formRegister.get('repeatPassword').hasError('required') && formRegister.controls['repeatPassword'].touched">
-                        This field is required!
-                      </span>
-                      <span class="text-danger"
-                        *ngIf="formRegister.get('repeatPassword').hasError('noMatch') && formRegister.controls['repeatPassword'].touched">
-                        Password and repeat password do not match!
-                      </span>
+                      <ng-container
+                        *ngTemplateOutlet="errorTemplate; context: { control: formRegister.get('repeatPassword') }"></ng-container>
                     </div>
                   </div>
-
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                     <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">
                       Register
@@ -80,6 +62,17 @@
   </section>
 </nz-spin>
 
-
-
-<ng-template>
+<ng-template #errorTemplate let-control="control">
+  <span *ngIf="control.hasError('required') && control.touched" class="text-danger">
+    This field is required
+  </span>
+  <span *ngIf="control.hasError('email') && control.touched" class="text-danger">
+    This field is wrong email
+  </span>
+  <span *ngIf="control.hasError('noMatch') && control.touched" class="text-danger">
+    Password and repeat password do not match!
+  </span>
+  <span *ngIf="control.hasError('minLength') && control.touched" class="text-danger">
+    This field requires at least 8 characters
+  </span>
+</ng-template>

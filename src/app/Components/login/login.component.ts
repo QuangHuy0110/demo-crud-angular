@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Service/auth.service';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NotificationService } from '../../Service/notification.service';
 
 @Component({
@@ -46,6 +45,10 @@ export class LoginComponent {
     this.authService.login({ email, password }).subscribe(
       data => {
         this.isLoading = false;
+        if (!data) {
+          this.notificationService.createNotification('error', 'Error', `Username or Password is incorrect!`)
+          return;
+        }
         this.notificationService.createNotification('success', 'Success', 'login successfully!')
         this.router.navigate(['/products'])
       },

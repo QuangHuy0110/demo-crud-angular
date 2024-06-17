@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../Service/cart.service';
 import { Cart, Product } from '../../Types';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { CheckoutComponent } from '../checkout/checkout.component';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NotificationService } from '../../Service/notification.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
@@ -14,9 +15,15 @@ export class CartComponent implements OnInit {
 
   totalPrice: number = 0;
 
+  isVisible: boolean = false;
+
+  checkoutForm: FormGroup;
+
   constructor(
     private cartService: CartService,
     private modal: NzModalService,
+    private notificationService: NotificationService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
@@ -30,6 +37,12 @@ export class CartComponent implements OnInit {
         this.totalPrice = data
       }
     );
+    this.checkoutForm = this.fb.group({
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      address: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required, Validators.maxLength(10)]],
+    });
   }
 
   clearCart(): void {
@@ -50,13 +63,30 @@ export class CartComponent implements OnInit {
     this.cartService.changeQuantity(product, Number(qty));
   }
 
-  checkout() {
-    this.modal.create({
-      nzTitle: 'confirm Chekcout ',
-      nzContent: CheckoutComponent,
-      nzMaskClosable: false,
-      nzClosable: false,
-      nzOnOk: () => console.log('Click ok')
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    if (!this.checkoutForm.valid) {
+      this.markFormGroupTouched(this.checkoutForm);
+      return;
+    }
+    this.notificationService.createNotification('success', 'Success', 'Your order has been submitted successfully!')
+    this.isVisible = false;
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      } else {
+        control.markAsTouched();
+      }
     });
   }
 }

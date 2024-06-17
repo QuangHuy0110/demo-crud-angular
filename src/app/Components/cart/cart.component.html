@@ -48,7 +48,9 @@
         <a [routerLink]="['/products']" class="btn btn-success"><span
             class="glyphicon glyphicon-arrow-left"></span>&nbsp;Continue
           Shopping</a>
-        <button class="btn btn-primary" (click)="checkout()">Check out</button>
+        <!-- <button class="btn btn-primary" (click)="checkout()">Check out</button> -->
+        <button class="btn btn-primary" (click)="showModal()"><span>Checkout</span></button>
+
         <button class="btn btn-danger" (click)="clearCart()">Clear Cart</button>
       </div>
       {{totalPrice}}
@@ -56,6 +58,59 @@
   </div>
 </div>
 
+<nz-modal [(nzVisible)]="isVisible" nzTitle="The first Modal" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+  nzOkText="Confirm" nzCancelText="Cancel">
+  <ng-container *nzModalContent>
+    <div class="container">
+      <form [formGroup]="checkoutForm" (ngSubmit)="handleOk()">
+        <div class="form-group mb-2">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Enter your name" formControlName="name">
+          <ng-container
+            *ngTemplateOutlet="errorTemplate; context: { control: checkoutForm.get('name') }"></ng-container>
+
+        </div>
+        <div class="form-group mb-2">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter your email" formControlName="email">
+          <ng-container
+            *ngTemplateOutlet="errorTemplate; context: { control: checkoutForm.get('email') }"></ng-container>
+        </div>
+        <div class="form-group mb-2">
+          <label for="address">Address</label>
+          <input type="text" class="form-control" id="address" placeholder="Enter your address"
+            formControlName="address">
+          <ng-container
+            *ngTemplateOutlet="errorTemplate; context: { control: checkoutForm.get('address') }"></ng-container>
+
+        </div>
+        <div class="form-group mb-2">
+          <label for="phone">Phone Number</label>
+          <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number"
+            formControlName="phoneNumber">
+          <ng-container
+            *ngTemplateOutlet="errorTemplate; context: { control: checkoutForm.get('phoneNumber') }"></ng-container>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+
+
+
+</nz-modal>
+
 <ng-template #emptyCart>
   <p>Your cart is empty.</p>
+</ng-template>
+
+<ng-template #errorTemplate let-control="control">
+  <span *ngIf="control.hasError('required') && control.touched" class="text-danger">
+    This field is required
+  </span>
+  <span *ngIf="control.hasError('email') && control.touched" class="text-danger">
+    This field is wrong email
+  </span>
+  <span *ngIf="control.hasError('maxlength') && control.touched" class="text-danger">
+    This field is can not longer than 10 digits
+  </span>
 </ng-template>

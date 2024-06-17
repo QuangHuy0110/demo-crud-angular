@@ -4,7 +4,6 @@ import { AppComponent } from './app.component';
 import { ProductListComponent } from './Components/product-list/product-list.component';
 import { ProductDetailComponent } from './Components/product-detail/product-detail.component';
 import { CartComponent } from './Components/cart/cart.component';
-import { CheckoutComponent } from './Components/checkout/checkout.component';
 import { CartService } from './Service/cart.service';
 import { ProductService } from './Service/product.service';
 import { HighlightDirective } from './Directives/highlight.directive';
@@ -27,7 +26,6 @@ import { NotificationService } from './Service/notification.service';
     ProductListComponent,
     ProductDetailComponent,
     CartComponent,
-    CheckoutComponent,
     HighlightDirective,
     PriceFormatPipe,
     HeaderComponent,

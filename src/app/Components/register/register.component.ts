@@ -33,9 +33,9 @@ export class RegisterComponent implements OnInit {
   initForm() {
     this.formRegister = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, checkMatchValidator()]],
+      password: ['', [Validators.required, Validators.minLength(8), checkMatchValidator()]],
       repeatPassword: ['', [Validators.required, checkMatchValidator()]]
-    }, { validators: checkMatchValidator() });
+    });
   }
 
   onSubmit() {
@@ -56,5 +56,16 @@ export class RegisterComponent implements OnInit {
         this.notificationService.createNotification('error', 'Error', `register faild with error : ${err}!`)
       }
     )
+  }
+
+  // passChange () =>{
+  //   ['password', 'repeatPassword'].forEach(item => {
+  //     this.formRegister.get(item)?.updateValueAndValidity()
+  //   })
+  // }
+  passChange() {
+    ['password', 'repeatPassword'].forEach(item => {
+      this.formRegister.get(item)?.updateValueAndValidity()
+    })
   }
 }
