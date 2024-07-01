@@ -7,10 +7,9 @@ import { NotificationService } from '../../Service/notification.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-
   isLoading = false;
 
   formLogin: FormGroup;
@@ -19,43 +18,57 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private notificationService: NotificationService,
-  ) {
-
-  }
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
-    this.initForm()
+    this.initForm();
   }
 
   initForm() {
     this.formLogin = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-    })
+    });
   }
 
   onSubmit() {
-    const { email, password } = this.formLogin.getRawValue()
+    const { email, password } = this.formLogin.getRawValue();
     if (!this.formLogin.valid) {
-      return
+      return;
     }
 
     this.isLoading = true;
     this.authService.login({ email, password }).subscribe(
-      data => {
+      (data) => {
         this.isLoading = false;
         if (!data) {
-          this.notificationService.createNotification('error', 'Error', `Username or Password is incorrect!`)
+          this.notificationService.createNotification(
+            'error',
+            'Error',
+            `Username or Password is incorrect!`
+          );
           return;
         }
-        this.notificationService.createNotification('success', 'Success', 'login successfully!')
-        this.router.navigate(['/products'])
+        this.notificationService.createNotification(
+          'success',
+          'Success',
+          'login successfully!'
+        );
+        this.router.navigate(['/products']);
       },
-      err => {
+      (err) => {
         this.isLoading = false;
-        this.notificationService.createNotification('error', 'Error', `login failed with error : ${err}!`)
+        this.notificationService.createNotification(
+          'error',
+          'Error',
+          `login failed with error : ${err}!`
+        );
       }
-    )
+    );
+  }
+
+  handleRegister() {
+    this.router.navigate(['/register']);
   }
 }

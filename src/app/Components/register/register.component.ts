@@ -7,10 +7,9 @@ import { NotificationService } from '../../Service/notification.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit {
-
   isLoading = false;
 
   formRegister: FormGroup;
@@ -19,50 +18,60 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private notificationService: NotificationService,
-  ) {
-  }
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
-    this.initForm()
+    this.initForm();
   }
 
   initForm() {
-    this.formRegister = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required,]],
-      repeatPassword: ['', [Validators.required,]]
-    }, { validator: this.mustMatch('password', 'repeatPassword') });
+    this.formRegister = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required]],
+        repeatPassword: ['', [Validators.required]],
+      },
+      { validator: this.mustMatch('password', 'repeatPassword') }
+    );
   }
 
   onSubmit() {
-    const { email, password } = this.formRegister.getRawValue()
+    this.formRegister.markAllAsTouched();
+    Object.values(this.formRegister.controls).forEach((control) => {
+      control.markAsDirty();
+      control.updateValueAndValidity({ onlySelf: true });
+    });
     if (!this.formRegister.valid) {
-      Object.values(this.formRegister.controls).forEach(control => {
-        control.markAsDirty();
-        control.updateValueAndValidity({ onlySelf: true });
-      })
-      return
+      return;
     }
-
+    const { email, password } = this.formRegister.getRawValue();
     this.isLoading = true;
     this.authService.register({ email, password }).subscribe(
-      data => {
+      (data) => {
         this.isLoading = false;
-        this.notificationService.createNotification('success', 'Success', 'Register success, please login!')
-        this.router.navigate(['/login'])
+        this.notificationService.createNotification(
+          'success',
+          'Success',
+          'Register success, please login!'
+        );
+        this.router.navigate(['/login']);
       },
-      err => {
+      (err) => {
         this.isLoading = false;
-        this.notificationService.createNotification('error', 'Error', `register faild with error : ${err}!`)
+        this.notificationService.createNotification(
+          'error',
+          'Error',
+          `register faild with error : ${err}!`
+        );
       }
-    )
+    );
   }
 
   passChange() {
-    ['password', 'repeatPassword'].forEach(item => {
-      this.formRegister.get(item)?.updateValueAndValidity()
-    })
+    ['password', 'repeatPassword'].forEach((item) => {
+      this.formRegister.get(item)?.updateValueAndValidity();
+    });
   }
 
   mustMatch(controlName: string, matchingControlName: string) {
