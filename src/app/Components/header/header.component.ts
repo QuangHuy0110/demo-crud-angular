@@ -1,23 +1,28 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { CartService } from '../../Service/cart.service';
+import { Observable } from 'rxjs';
+import { AbilityService } from '@casl/angular';
+import { PureAbility } from '@casl/ability';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit, DoCheck {
+export class HeaderComponent implements OnInit {
 
   quantity: number = 0;
 
-  constructor(private cartService: CartService) {
+  readonly ability$: Observable<PureAbility>;
+
+  constructor(
+    private cartService: CartService,
+    private abilityService: AbilityService<PureAbility>
+  ) {
+    this.ability$ = abilityService.ability$;
 
   }
 
-
-  ngDoCheck(): void {
-    // this.quantity = this.cartService.getQuantityCart()
-  }
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
     this.cartService.getQuantityCart().subscribe(

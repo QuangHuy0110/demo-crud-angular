@@ -19,6 +19,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DemoNgZorroAntdModule } from './ng-zorro-antd.module';
 import { NotificationService } from './Service/notification.service';
+import { Ability, createMongoAbility, PureAbility } from '@casl/ability';
+import { AblePipe } from './Pipes/able.pipe';
 
 @NgModule({
   declarations: [
@@ -34,15 +36,26 @@ import { NotificationService } from './Service/notification.service';
     LoginComponent,
     PriceFormatPipe,
     EllipsisPipe,
+    AblePipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    DemoNgZorroAntdModule
+    DemoNgZorroAntdModule,
   ],
-  providers: [CartService, ProductService, AuthService, NotificationService],
+  providers: [CartService, ProductService, AuthService, NotificationService,
+    { 
+      provide: Ability,
+      useValue: new Ability([])
+    },
+    {
+      provide: PureAbility,
+      useExisting: Ability
+    }
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

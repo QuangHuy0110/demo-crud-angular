@@ -5,18 +5,21 @@
         class="d-inline-block align-text-top" />
       Huy Envisu
     </a>
+    <ng-container *ngIf="ability$ | async as ability">
+      <div *ngIf="ability.can('manage', 'all')">Admin</div>
+    </ng-container>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <ul class="navbar-nav">
-      <li class="nav-item cart-icon">
-        <a class="nav-link" [routerLink]="['/cart']">Cart</a>
-        <span class="quantity">{{ quantity }}</span>
-      </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/checkout']">Checkout</a>
-      </li> -->
-    </ul>
+    <ng-container *ngIf="ability$ | async as ability">
+      <ul *ngIf="ability.can('read', 'all')" class="navbar-nav">
+        <li class="nav-item cart-icon">
+          <a class="nav-link" [routerLink]="['/cart']">Cart</a>
+          <span class="quantity">{{ quantity }}</span>
+        </li>
+      </ul>
+    </ng-container>
+    
   </div>
 </nav>
